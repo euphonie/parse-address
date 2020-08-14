@@ -5,7 +5,7 @@
   "main": "dist/address-parser.min.js",
   "scripts": {
     "test": "mocha --require @babel/register",
-    "build": "babel src --out-file dist/address-parser.min.js"
+    "build": "webpack --mode production"
   },
   "repository": {
     "type": "git",
@@ -28,25 +28,27 @@
   },
   "homepage": "https://github.com/hassansin/parse-address",
   "dependencies": {
+    "core-js": "^3.6.5",
     "xregexp": "^3.1.1"
   },
   "devDependencies": {
     "@babel/cli": "^7.10.5",
     "@babel/core": "^7.11.1",
-    "@babel/plugin-transform-runtime": "^7.11.0",
     "@babel/preset-env": "^7.11.0",
     "@babel/register": "^7.10.5",
     "@babel/runtime": "^7.11.2",
     "@commitlint/cli": "^9.1.1",
     "@commitlint/config-conventional": "^9.1.1",
-    "babel-preset-minify": "^0.5.1",
+    "babel-loader": "^8.1.0",
     "eslint": "^7.6.0",
     "eslint-config-airbnb": "^18.2.0",
     "eslint-config-prettier": "^6.11.0",
     "eslint-plugin-prettier": "^3.1.4",
     "husky": "^4.2.5",
     "mocha": "^8.1.1",
-    "prettier": "^2.0.5"
+    "prettier": "^2.0.5",
+    "webpack": "^4.44.1",
+    "webpack-cli": "^3.3.12"
   },
   "husky": {
     "hooks": {
