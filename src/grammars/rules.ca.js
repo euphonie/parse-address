@@ -15,6 +15,8 @@ const Normalization_Map = {
   state: vocabulary.state_code
 };
 
+const Normalization_Regex = /^\s+|\s+$/g;
+
 const Direction_Code = Utils.invert(vocabulary.directional);
 
 let Address_Rules = {};
@@ -173,6 +175,7 @@ Address_Rules.intersection = XRegExp(`
 
 export default{
   Normalization_Map,
+  Normalization_Regex,
   Direction_Code,
   Address_Rules
 };
