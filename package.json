@@ -1,8 +1,8 @@
 {
   "name": "parse-address",
-  "version": "1.1.2",
-  "description": "US Street Address Parser",
-  "main": "dist/address-parser.min.js",
+  "version": "2.0.0",
+  "description": "Adaptable Street Address Parser",
+  "main": "src/address.js",
   "scripts": {
     "test": "mocha --require @babel/register",
     "build": "webpack --mode production"
@@ -18,10 +18,14 @@
     "address",
     "street",
     "US",
+    "Canada",
     "Geo::StreetAddress::US",
     "geo"
   ],
   "author": "hassansin <rezatxe@gmail.com> (https://github.com/hassansin)",
+  "contributors": [
+    "euphonie <cs.joel.09@gmail.com>"
+  ],
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/hassansin/parse-address/issues"
