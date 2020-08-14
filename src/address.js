@@ -30,7 +30,7 @@ export default class AddressParser {
       var key = isFinite(k.split("_").pop())
         ? k.split("_").slice(0, -1).join("_")
         : k;
-      if (parts[k]) parsed[key] = parts[k].trim().replace(/^\s+|\s+$/g, "");
+      if (parts[k]) parsed[key] = parts[k].trim().replace(grammarRules.Normalization_Regex, "");
     });
     Utils.each(grammarRules.Normalization_Map, function (map, key) {
       if (parsed[key] && map[parsed[key].toLowerCase()]) {
