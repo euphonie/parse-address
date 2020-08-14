@@ -1,11 +1,11 @@
 {
   "name": "parse-address",
-  "version": "1.1.2",
-  "description": "US Street Address Parser",
-  "main": "address.js",
+  "version": "2.0.0",
+  "description": "Adaptable Street Address Parser",
+  "main": "src/address.js",
   "scripts": {
-    "test": "node test",
-    "build": "./node_modules/browserify/bin/cmd.js address.js --standalone parseAddress | ./node_modules/.bin/uglifyjs  > parse-address.min.js"
+    "test": "mocha --require @babel/register",
+    "build": "webpack --mode production"
   },
   "repository": {
     "type": "git",
@@ -18,16 +18,45 @@
     "address",
     "street",
     "US",
+    "Canada",
     "Geo::StreetAddress::US",
     "geo"
   ],
   "author": "hassansin <rezatxe@gmail.com> (https://github.com/hassansin)",
+  "contributors": [
+    "euphonie <cs.joel.09@gmail.com>"
+  ],
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/hassansin/parse-address/issues"
   },
   "homepage": "https://github.com/hassansin/parse-address",
   "dependencies": {
+    "core-js": "^3.6.5",
     "xregexp": "^3.1.1"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.10.5",
+    "@babel/core": "^7.11.1",
+    "@babel/preset-env": "^7.11.0",
+    "@babel/register": "^7.10.5",
+    "@babel/runtime": "^7.11.2",
+    "@commitlint/cli": "^9.1.1",
+    "@commitlint/config-conventional": "^9.1.1",
+    "babel-loader": "^8.1.0",
+    "eslint": "^7.6.0",
+    "eslint-config-airbnb": "^18.2.0",
+    "eslint-config-prettier": "^6.11.0",
+    "eslint-plugin-prettier": "^3.1.4",
+    "husky": "^4.2.5",
+    "mocha": "^8.1.1",
+    "prettier": "^2.0.5",
+    "webpack": "^4.44.1",
+    "webpack-cli": "^3.3.12"
+  },
+  "husky": {
+    "hooks": {
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
+    }
   }
 }
