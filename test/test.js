@@ -1,5 +1,5 @@
-import AddressParser from "../src/address";
-import { deepEqual } from "assert";
+import { AddressParser } from "../src/address";
+import assert from "assert";
 
 describe('Validate addresses',  () => {
 
@@ -692,7 +692,7 @@ describe('Validate addresses',  () => {
     const parser = new AddressParser("ca");
     Object.keys(ca_addresses).forEach(function (k) {
       var parsed = parser.parseLocation(k);
-      deepEqual(
+      assert.deepEqual(
         ca_addresses[k],
         parsed,
         k +
@@ -710,7 +710,7 @@ describe('Validate addresses',  () => {
     const parser = new AddressParser("us");
     Object.keys(us_addresses).forEach(function (k) {
       var parsed = parser.parseLocation(k);
-      deepEqual(
+      assert.deepEqual(
         us_addresses[k],
         parsed,
         k +

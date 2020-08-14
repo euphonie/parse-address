@@ -1,12 +1,12 @@
-// Joel Cantoral
+// Copyright (c) 2014-2015, hassansin
 //
 // Port to ES6 based on: https://github.com/hassansin/parse-address
 //Perl Ref: http://cpansearch.perl.org/src/TIMB/Geo-StreetAddress-US-1.04/US.pm
 import Utils from "./utils";
-import GrammarSpecifications from "./grammarSpec";
+import { grammars } from "./grammars/rules";
 import XRegExp from "xregexp";
 
-export default class AddressParser {
+export class AddressParser {
   constructor(country) {
     let root = this;
     root.country = country;
@@ -14,10 +14,7 @@ export default class AddressParser {
     root.initialized = false;
     root.rules = {};
 
-    let grammarLoader = new GrammarSpecifications();
-    grammarLoader.loadGrammars();
-
-    root.grammar = grammarLoader.grammars[root.country].default;
+    root.grammar = grammars[root.country];
   }
 
   normalize_address(parts) {
