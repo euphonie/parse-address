@@ -35,7 +35,7 @@ describe('Validate addresses',  () => {
       unit_number: "68",
       prefix: "N.",
       street: "Gonzales",
-      type: "Ln",
+      type: "Lane",
       city: "Vancouver",
       state: "BC",
       fsa: "V5K",
@@ -66,7 +66,7 @@ describe('Validate addresses',  () => {
       unit_number: "14205",
       street: "96",
       type: "Ave",
-      suffix: "NW",
+      st_suffix: "NW",
       city: "Northwest Edmonton",
       state: "AB",
       fsa: "T5N",
@@ -82,11 +82,11 @@ describe('Validate addresses',  () => {
       ldu: "5T5"
     },
     "10-123 1/2 main st nw Montréal, QC H3Z 2Y7": {
-      unit_number: "10",
-      civic_number: "123",
+      unit_number: "10-123",
+      civic_number_suffix: "1/2",
       street: "main",
       type: "St",
-      suffix: "nw",
+      st_suffix: "nw",
       city: "Montréal",
       state: "QC",
       fsa: "H3Z",
@@ -703,6 +703,136 @@ describe('Validate addresses',  () => {
           JSON.stringify(parsed, null, 4)
       );
     });
+    done();
+  });
+
+  it('should parse address only with street city and province', done => {
+    const parser = new AddressParser("ca");
+    const small_address = 'Pascoe Road Sooke BC';
+    var parsed = parser.parseLocation(small_address);
+    const expected_parsed = {
+      street: "Pascoe",
+      type: "Rd",
+      city: "Sooke",
+      state: "BC"
+    };
+    assert.deepEqual(
+      parsed,
+      expected_parsed,
+      small_address +
+        " was not correctly applied. " +
+        " Expected: " +
+        JSON.stringify(parsed, null, 4) +
+        " Result: " +
+        JSON.stringify(expected_parsed, null, 4)
+    );
+    done();
+  });
+
+  it('should parse address with civic number suffix', done => {
+    const parser = new AddressParser("ca");
+    const small_address = '10-123 1/2 main st nw Montréal, QC H3Z 2Y7';
+    var parsed = parser.parseLocation(small_address);
+    const expected_parsed = {
+      unit_number: "10-123",
+      civic_number_suffix: "1/2",
+      street: "main",
+      type: "St",
+      st_suffix: "nw",
+      city: "Montréal",
+      state: "QC",
+      fsa: "H3Z",
+      ldu: "2Y7"
+    };
+    assert.deepEqual(
+      parsed,
+      expected_parsed,
+      small_address +
+        " was not correctly applied. " +
+        " Expected: " +
+        JSON.stringify(parsed, null, 4) +
+        " Result: " +
+        JSON.stringify(expected_parsed, null, 4)
+    );
+    done();
+  });
+
+  it('should parse address with a letter as civic number suffix', done => {
+    const parser = new AddressParser("ca");
+    const small_address = '10-123A main st nw Montréal, QC H3Z 2Y7';
+    var parsed = parser.parseLocation(small_address);
+    const expected_parsed = {
+      unit_number: "10-123",
+      civic_number_suffix: "A",
+      street: "main",
+      type: "St",
+      st_suffix: "nw",
+      city: "Montréal",
+      state: "QC",
+      fsa: "H3Z",
+      ldu: "2Y7"
+    };
+    assert.deepEqual(
+      parsed,
+      expected_parsed,
+      small_address +
+        " was not correctly applied. " +
+        " Expected: " +
+        JSON.stringify(parsed, null, 4) +
+        " Result: " +
+        JSON.stringify(expected_parsed, null, 4)
+    );
+    done();
+  });
+
+  it('should parse address with sec unit basement', done => {
+    const parser = new AddressParser("ca");
+    const small_address = 'BSMT 12 Eastwood place st albert, AB';
+    var parsed = parser.parseLocation(small_address);
+    const expected_parsed = {
+      unit_number: "12",
+      sec_unit_type: "BSMT",
+      street: "Eastwood",
+      type: "Pl",
+      city: "st albert",
+      state: "AB"
+    };
+    assert.deepEqual(
+      parsed,
+      expected_parsed,
+      small_address +
+        " was not correctly applied. " +
+        " Expected: " +
+        JSON.stringify(parsed, null, 4) +
+        " Result: " +
+        JSON.stringify(expected_parsed, null, 4)
+    );
+    done();
+  });
+
+  it('should parse address with numeric street', done => {
+    const parser = new AddressParser("ca");
+    const small_address = '10-123 36A st montreal, QC H3Z 2Y7';
+    var parsed = parser.parseLocation(small_address);
+    const expected_parsed = {
+      unit_number: "10-123",
+      street: "36A",
+      type: "St",
+      city: "montreal",
+      state: "QC",
+      fsa: 'H3Z',
+      ldu: '2Y7'
+    };
+    assert.deepEqual(
+      parsed,
+      expected_parsed,
+      small_address +
+        " was not correctly applied. " +
+        " Expected: " +
+        JSON.stringify(parsed, null, 4) +
+        " Result: " +
+        JSON.stringify(expected_parsed, null, 4)
+    );
     done();
   });
 

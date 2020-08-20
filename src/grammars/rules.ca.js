@@ -12,7 +12,7 @@ const Normalization_Map = {
   type: vocabulary.street_type,
   type1: vocabulary.street_type,
   type2: vocabulary.street_type,
-  state: vocabulary.state_code
+  province: vocabulary.province_code
 };
 
 const Normalization_Regex = /^\s+|\s+$/g;
@@ -29,10 +29,18 @@ Address_Rules.type = Utils.flatten(vocabulary.street_type)
 
 Address_Rules.fraction = "\\d+\\/\\d+";
 
-Address_Rules.state =
+Address_Rules.unit_suffix = `
+  (?<civic_number_suffix> (
+      (\\W*${Address_Rules.fraction}) |
+      ((?<=\\d+)[A-Za-z]{1}) |
+    ) | (\\W*)
+  )
+`;
+
+Address_Rules.province =
   "\\b(?:" +
-  Utils.keys(vocabulary.state_code)
-    .concat(Utils.values(vocabulary.state_code))
+  Utils.keys(vocabulary.province_code)
+    .concat(Utils.values(vocabulary.province_code))
     .map(XRegExp.escape)
     .join("|") +
   ")\\b";
@@ -49,10 +57,10 @@ Address_Rules.direct = Utils.values(vocabulary.directional)
 Address_Rules.dircode = Utils.keys(Direction_Code).join("|");
 Address_Rules.corner = "(?:\\band\\b|\\bat\\b|&|\\@)";
 
-Address_Rules.zip =
+Address_Rules.postalcode =
   "(?<fsa>[A-Za-z][0-9][A-Za-z])[ ]?(?<ldu>[0-9][A-Za-z][0-9])?";
 Address_Rules.number =
-  "(?<unit_number>(\\d+)|([N|S|E|W]\\d{1,3}[N|S|E|W]\\d{1,6}))(?=\\D)(-)?(?<civic_number>(\\d+)?)";
+  "(?<unit_number>(\\d+-?\\d*)|([N|S|E|W]\\d{1,3}[N|S|E|W]\\d{1,6}))(?=\\D)";
 
 Address_Rules.street = `
 (?:
@@ -60,18 +68,18 @@ Address_Rules.street = `
      (?<type_0>${Address_Rules.type})\\b
   )
   |
-  (?:(?<prefix_0>${Address_Rules.direct})\\W+)?
+  (?:(?<prefix_0>${Address_Rules.direct}\\.?)\\W+)?
   (?:
     (?<street_1>[^,]*\\d)
-    (?:[^\\w,]*(?<suffix_1>${Address_Rules.direct})\\b)
+    (?:[^\\w,]*(?<st_suffix_1>${Address_Rules.direct})\\b)
     |
     (?<street_2>((?!((${Address_Rules.type})\\w))[^,])+)
     (?:[^\\w,]+(?<type_2>${Address_Rules.type})\\b)
-    (?:[^\\w,]+(?<suffix_2>${Address_Rules.direct})\\b)?
+    (?:[^\\w,]+(?<st_suffix_2>${Address_Rules.direct})\\b)?
     |
     (?<street_3>[^,]+?)
     (?:[^\\w,]+(?<type_3>${Address_Rules.type})\\b)?
-    (?:[^\\w,]+(?<suffix_3>${Address_Rules.direct})\\b)?
+    (?:[^\\w,]+(?<st_suffix_3>${Address_Rules.direct})\\b)?
   )
 )`;
 
@@ -125,13 +133,13 @@ Address_Rules.sec_unit = `
 Address_Rules.city_and_state = `
 (?:
   (?<city>[^\\d,]+?)\\W+
-  (?<state>${Address_Rules.state})
+  (?<state>${Address_Rules.province})
 )
 `;
 
 Address_Rules.place = `
 (?:${Address_Rules.city_and_state}\\W*)?
-(?:${Address_Rules.zip})?
+(?:${Address_Rules.postalcode})?
 `;
 
 // Main entry rules
@@ -139,8 +147,8 @@ Address_Rules.place = `
 Address_Rules.address = XRegExp(`
 ^
 [^\\w\\#]*
-(${Address_Rules.number})\\W*
-(?:${Address_Rules.fraction}\\W*)?
+(${Address_Rules.number})
+(?:${Address_Rules.unit_suffix}\\W*)?
    ${Address_Rules.street}\\W+
 (?:${Address_Rules.sec_unit})?\\W*  #fix2
     ${Address_Rules.place}
@@ -152,8 +160,8 @@ Address_Rules.informal_address = XRegExp(`
   ^
   \\s*
   (?:${Address_Rules.sec_unit}${sep})?
-  (?:${Address_Rules.number})?\\W*
-  (?:${Address_Rules.fraction}\\W*)?
+  (?:${Address_Rules.number})?
+  (?:${Address_Rules.unit_suffix}\\W*)?
       ${Address_Rules.street}${sep}
   (?:${Address_Rules.sec_unit.replace(/_\d/g,'$&1')}${sep})?
   (?:${Address_Rules.place})?
