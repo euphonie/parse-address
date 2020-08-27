@@ -31,9 +31,9 @@ describe('Validate addresses',  () => {
       fsa: "G5H",
       ldu: "2Y5"
     },
-    "68 N. Gonzales Lane Vancouver, BC V5K 5A8": {
+    "68 N Gonzales Lane Vancouver, BC V5K 5A8": {
       unit_number: "68",
-      prefix: "N.",
+      prefix: "N",
       street: "Gonzales",
       type: "Lane",
       city: "Vancouver",
@@ -66,7 +66,7 @@ describe('Validate addresses',  () => {
       unit_number: "14205",
       street: "96",
       type: "Ave",
-      st_suffix: "NW",
+      suffix: "NW",
       city: "Northwest Edmonton",
       state: "AB",
       fsa: "T5N",
@@ -86,7 +86,7 @@ describe('Validate addresses',  () => {
       civic_number_suffix: "1/2",
       street: "main",
       type: "St",
-      st_suffix: "nw",
+      suffix: "nw",
       city: "Montréal",
       state: "QC",
       fsa: "H3Z",
@@ -738,7 +738,7 @@ describe('Validate addresses',  () => {
       civic_number_suffix: "1/2",
       street: "main",
       type: "St",
-      st_suffix: "nw",
+      suffix: "nw",
       city: "Montréal",
       state: "QC",
       fsa: "H3Z",
@@ -766,7 +766,7 @@ describe('Validate addresses',  () => {
       civic_number_suffix: "A",
       street: "main",
       type: "St",
-      st_suffix: "nw",
+      suffix: "nw",
       city: "Montréal",
       state: "QC",
       fsa: "H3Z",
@@ -778,9 +778,9 @@ describe('Validate addresses',  () => {
       small_address +
         " was not correctly applied. " +
         " Expected: " +
-        JSON.stringify(parsed, null, 4) +
+        JSON.stringify(expected_parsed, null, 4) +
         " Result: " +
-        JSON.stringify(expected_parsed, null, 4)
+        JSON.stringify(parsed, null, 4)
     );
     done();
   });
@@ -803,9 +803,9 @@ describe('Validate addresses',  () => {
       small_address +
         " was not correctly applied. " +
         " Expected: " +
-        JSON.stringify(parsed, null, 4) +
+        JSON.stringify(expected_parsed, null, 4) +
         " Result: " +
-        JSON.stringify(expected_parsed, null, 4)
+        JSON.stringify(parsed, null, 4)
     );
     done();
   });
