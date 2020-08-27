@@ -48,7 +48,6 @@ export default {
     brooks: "brks",
     burg: "bg",
     burgs: "bgs",
-    "by-pass": "bypass",
     bypa: "bypass",
     bypas: "bypass",
     bypass: "bypass",

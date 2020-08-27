@@ -29,14 +29,6 @@ Address_Rules.type = Utils.flatten(vocabulary.street_type)
 
 Address_Rules.fraction = "\\d+\\/\\d+";
 
-Address_Rules.unit_suffix = `
-  (?<civic_number_suffix> (
-      (\\W*${Address_Rules.fraction}) |
-      ((?<=\\d+)[A-Za-z]{1}) |
-    ) | (\\W*)
-  )
-`;
-
 Address_Rules.province =
   "\\b(?:" +
   Utils.keys(vocabulary.province_code)
@@ -59,8 +51,11 @@ Address_Rules.corner = "(?:\\band\\b|\\bat\\b|&|\\@)";
 
 Address_Rules.postalcode =
   "(?<fsa>[A-Za-z][0-9][A-Za-z])[ ]?(?<ldu>[0-9][A-Za-z][0-9])?";
-Address_Rules.number =
-  "(?<unit_number>(\\d+-?\\d*)|([N|S|E|W]\\d{1,3}[N|S|E|W]\\d{1,6}))(?=\\D)";
+Address_Rules.number = `
+(?<unit_number>
+  (\\d+-?\\d*)|([N|S|E|W]\\d{1,3}[N|S|E|W]\\d{1,6})
+)(?<civic_number_suffix>((\\W*${Address_Rules.fraction}) | [A-Za-z]))?
+(?=\\D)`;
 
 Address_Rules.street = `
 (?:
@@ -68,14 +63,14 @@ Address_Rules.street = `
      (?<type_0>${Address_Rules.type})\\b
   )
   |
-  (?:(?<prefix_0>${Address_Rules.direct}\\.?)\\W+)?
+  (?:\\W?(?<prefix_0>${Address_Rules.direct})\\W+)?
   (?:
     (?<street_1>[^,]*\\d)
     (?:[^\\w,]*(?<st_suffix_1>${Address_Rules.direct})\\b)
     |
-    (?<street_2>((?!((${Address_Rules.type})\\w))[^,])+)
-    (?:[^\\w,]+(?<type_2>${Address_Rules.type})\\b)
-    (?:[^\\w,]+(?<st_suffix_2>${Address_Rules.direct})\\b)?
+    (?<street_2>[^,]+?)
+    (?:[^\\w,](?<type_2>${Address_Rules.type})+\\b)
+    (?:[^\\w,]+(?<suffix_2>${Address_Rules.direct})\\b)?
     |
     (?<street_3>[^,]+?)
     (?:[^\\w,]+(?<type_3>${Address_Rules.type})\\b)?
@@ -147,8 +142,7 @@ Address_Rules.place = `
 Address_Rules.address = XRegExp(`
 ^
 [^\\w\\#]*
-(${Address_Rules.number})
-(?:${Address_Rules.unit_suffix}\\W*)?
+  (${Address_Rules.number})
    ${Address_Rules.street}\\W+
 (?:${Address_Rules.sec_unit})?\\W*  #fix2
     ${Address_Rules.place}
@@ -161,7 +155,6 @@ Address_Rules.informal_address = XRegExp(`
   \\s*
   (?:${Address_Rules.sec_unit}${sep})?
   (?:${Address_Rules.number})?
-  (?:${Address_Rules.unit_suffix}\\W*)?
       ${Address_Rules.street}${sep}
   (?:${Address_Rules.sec_unit.replace(/_\d/g,'$&1')}${sep})?
   (?:${Address_Rules.place})?
